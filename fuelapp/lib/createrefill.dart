@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore package
+import 'navBar.dart';
 
 class CreateRefillScreen extends StatefulWidget {
-  const CreateRefillScreen({super.key});
+  const CreateRefillScreen({Key? key}) : super(key: key);
 
   @override
   _CreateRefillScreenState createState() => _CreateRefillScreenState();
@@ -15,6 +16,47 @@ class _CreateRefillScreenState extends State<CreateRefillScreen> {
   double _price = 0.0;
   double _filled = 0.0;
   double _sumUSD = 0.0;
+
+  // Firestore collection reference
+  final CollectionReference _ref = FirebaseFirestore.instance.collection('Refills');
+
+  void _saveRefillData() {
+  // Create a map with the refill data
+  Map<String, dynamic> refillData = {
+    'odometer': 0, // Add the actual value here
+    'filled': _filled,
+    'price': _price,
+    'sum': _sumUSD,
+    'date': _selectedDate.toString(),
+    'time': _selectedTime.toString(),
+    'fuelType': _selectedFuelType,
+    'comment': '', // Add the actual comment here
+  };
+
+  // Add refill data to Firestore
+  _ref.add(refillData).then((_) {
+    // Data successfully saved
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Refill data saved successfully')),
+    );
+    
+    // Clear input fields
+    setState(() {
+      _filled = 0.0;
+      _price = 0.0;
+      _sumUSD = 0.0;
+      _selectedDate = DateTime.now();
+      _selectedTime = TimeOfDay.now();
+      _selectedFuelType = '95';
+    });
+  }).catchError((error) {
+    // Error occurred while saving data
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Failed to save refill data')),
+    );
+  });
+}
+
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -121,21 +163,19 @@ class _CreateRefillScreenState extends State<CreateRefillScreen> {
             const SizedBox(height: 16.0),
             Container(
               alignment: Alignment.center,
-               child: SizedBox(
-    width: MediaQuery.of(context).size.width * 0.7, // Fill 70% of available width
-    child: ElevatedButton(
-      onPressed: () {
-        // Add logic to save refill data
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color.fromARGB(255, 183, 88, 0),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.7, // Fill 70% of available width
+                child: ElevatedButton(
+                  onPressed: _saveRefillData,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 183, 88, 0),
+                  ),
+                  child: const Text(
+                    'Save',
+                    style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                  ),
                 ),
-      child: const Text(
-        'Save',
-        style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-      ),
               ),
-            ),
             ),
           ],
         ),
@@ -149,38 +189,37 @@ class _CreateRefillScreenState extends State<CreateRefillScreen> {
     });
   }
 
- Widget _buildInputRow({required String label, required Widget inputField}) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      Text(
-        label,
-        style: const TextStyle(fontSize: 16.0),
-      ),
-      Container(
-        width: 150,
-        height: 50,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: const Color.fromARGB(255, 159, 159, 159),
-          ),
-          borderRadius: BorderRadius.circular(8.0),
+  Widget _buildInputRow({required String label, required Widget inputField}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(fontSize: 16.0),
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: SizedBox(
-              width: 150,
-              child: inputField,
+        Container(
+          width: 150,
+          height: 50,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: const Color.fromARGB(255, 159, 159, 159),
+            ),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: SizedBox(
+                width: 150,
+                child: inputField,
+              ),
             ),
           ),
         ),
-      ),
-    ],
-  );
-}
-
+      ],
+    );
+  }
 
   Widget _buildDateRow() {
     return Row(
@@ -257,5 +296,13 @@ class _CreateRefillScreenState extends State<CreateRefillScreen> {
     }
   }
 }
+
+void main() {
+  runApp(const MaterialApp(
+    home: CreateRefillScreen(),
+  ));
+}
+
+
 
 
