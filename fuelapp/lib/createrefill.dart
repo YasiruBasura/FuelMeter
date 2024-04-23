@@ -16,47 +16,34 @@ class _CreateRefillScreenState extends State<CreateRefillScreen> {
   double _price = 0.0;
   double _filled = 0.0;
   double _sumUSD = 0.0;
+  String _comment = '';
+  double _odometer = 0.0;
 
   // Firestore collection reference
   final CollectionReference _ref = FirebaseFirestore.instance.collection('Refills');
 
   void _saveRefillData() {
-  // Create a map with the refill data
-  Map<String, dynamic> refillData = {
-    'odometer': 0, // Add the actual value here
-    'filled': _filled,
-    'price': _price,
-    'sum': _sumUSD,
-    'date': _selectedDate.toString(),
-    'time': _selectedTime.toString(),
-    'fuelType': _selectedFuelType,
-    'comment': '', // Add the actual comment here
-  };
+    // Create a map with the refill data
+    Map<String, dynamic> refillData = {
+      'odometer': _odometer,
+      'filled': _filled,
+      'price': _price,
+      'sum': _sumUSD,
+      'date': _selectedDate.toString(),
+      'time': _selectedTime.toString(),
+      'fuelType': _selectedFuelType,
+      'comment': _comment, 
+    };
 
-  // Add refill data to Firestore
-  _ref.add(refillData).then((_) {
-    // Data successfully saved
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Refill data saved successfully')),
-    );
-    
-    // Clear input fields
-    setState(() {
-      _filled = 0.0;
-      _price = 0.0;
-      _sumUSD = 0.0;
-      _selectedDate = DateTime.now();
-      _selectedTime = TimeOfDay.now();
-      _selectedFuelType = '95';
+    // Add refill data to Firestore
+    _ref.add(refillData).then((_) {
+      // Data successfully saved
+      _showSnackBar('Refill data saved successfully');
+    }).catchError((error) {
+      // Error occurred while saving data
+      _showSnackBar('Failed to save refill data');
     });
-  }).catchError((error) {
-    // Error occurred while saving data
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Failed to save refill data')),
-    );
-  });
-}
-
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -102,6 +89,11 @@ class _CreateRefillScreenState extends State<CreateRefillScreen> {
               inputField: TextFormField(
                 keyboardType: TextInputType.number,
                 decoration: _buildInputDecoration(),
+                onChanged: (value) {
+                  setState(() {
+                    _odometer = double.tryParse(value) ?? 0.0;
+                  });
+                },
               ),
             ),
             const SizedBox(height: 16.0),
@@ -158,6 +150,11 @@ class _CreateRefillScreenState extends State<CreateRefillScreen> {
               inputField: TextFormField(
                 maxLines: null,
                 decoration: _buildInputDecoration(),
+                onChanged: (value) {
+                  setState(() {
+                    _comment = value;
+                  });
+                },
               ),
             ),
             const SizedBox(height: 16.0),
@@ -295,12 +292,12 @@ class _CreateRefillScreenState extends State<CreateRefillScreen> {
       });
     }
   }
-}
 
-void main() {
-  runApp(const MaterialApp(
-    home: CreateRefillScreen(),
-  ));
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
 }
 
 
