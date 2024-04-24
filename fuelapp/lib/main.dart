@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'favourites.dart';
 import 'home.dart';
 import 'createrefill.dart';
+import 'settings.dart';
 
 
 Future<void> main() async {
@@ -24,6 +25,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/favourites': (context) => const FavoritesScreen(),
         '/createRefill': (context) => const CreateRefillScreen(),
+        '/settings': (context) => const SettingsScreen(),
+        
         
         // Add more routes as needed
       },
