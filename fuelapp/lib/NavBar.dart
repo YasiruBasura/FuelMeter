@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'createRefill.dart';
+import 'favourites.dart';
 
 class NavBar extends StatelessWidget {
   final String? selectedVehicleId;
-
   const NavBar({Key? key, this.selectedVehicleId}) : super(key: key);
+  final selectedRefillId = null;
 
   @override
   Widget build(BuildContext context) {
@@ -64,27 +66,32 @@ class NavBar extends StatelessWidget {
                         },
                       ),
                     ListTile(
-                      leading: const Icon(Icons.favorite),
-                      title: const Text('Favorites'),
+                      leading: const Icon(Icons.receipt_long),
+                      title: const Text('Refills'),
                       onTap: () {
-                        Navigator.pushNamed(context, '/favourites');
+                       Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FavoritesScreen(selectedVehicleId: selectedVehicleId),
+                            ),
+                       );
                       },
                     ),
                     ListTile(
-                      leading: const Icon(Icons.person),
-                      title: const Text('Friends'),
+                      leading: const Icon(Icons.playlist_add),
+                      title: const Text('New Refill'),
                       onTap: () {
                         Navigator.pushNamed(context, '/createRefill');
                       },
                     ),
                     ListTile(
-                      leading: const Icon(Icons.share),
-                      title: const Text('Share'),
+                      leading: const Icon(Icons.storage),
+                      title: const Text('Details'),
                       onTap: () {},
                     ),
                     const ListTile(
-                      leading: Icon(Icons.notifications),
-                      title: Text('Request'),
+                      leading: Icon(Icons.stacked_bar_chart),
+                      title: Text('Stats'),
                     ),
                     const Divider(),
                     ListTile(
