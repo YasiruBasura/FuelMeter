@@ -5,7 +5,6 @@ import 'home.dart';
 import 'createrefill.dart';
 import 'settings.dart';
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -13,24 +12,21 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-     
       title: 'Your App',
       theme: ThemeData.dark(),
-      home: const HomeScreen(),
+      initialRoute: '/',
       routes: {
+        '/': (context) => const  HomeScreen(selectedVehicleId: null),
         '/favourites': (context) => const FavoritesScreen(),
         '/createRefill': (context) => const CreateRefillScreen(),
         '/settings': (context) => const SettingsScreen(),
-        
-        
-        // Add more routes as needed
       },
-      initialRoute: '/',
     );
   }
 }
+

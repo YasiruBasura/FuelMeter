@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fuelapp/home.dart';
 import 'createvehicle.dart';
 
 class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({Key? key});
+
+  const SettingsScreen({Key? key,});
 
   @override
   Widget build(BuildContext context) {
@@ -34,44 +36,47 @@ class SettingsScreen extends StatelessWidget {
             MaterialPageRoute(builder: (context) => const CreateVehicleScreen()),
           );
         },
-        backgroundColor: Color.fromARGB(255, 183, 88, 0), // Set background color
+        backgroundColor: const Color.fromARGB(255, 183, 88, 0), // Set background color
         child: const Icon(Icons.add),
       ),
     );
   }
 
   Widget _buildVehicleItem(BuildContext context, DocumentSnapshot vehicle) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      child: Row(
+    return ListTile(
+      leading: Container(
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: NetworkImage(vehicle['logoUrl']), // Assuming logoUrl is the URL of the brand logo
+          ),
+        ),
+      ),
+      title: Text(
+        '${vehicle['brand']} ${vehicle['model']}',
+        style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+      ),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: NetworkImage(vehicle['logoUrl']), // Assuming logoUrl is the URL of the brand logo
-              ),
-            ),
-          ),
-          const SizedBox(width: 16.0),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '${vehicle['brand']} ${vehicle['model']}',
-                style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8.0),
-              Text('Type: ${vehicle['type']}'),
-              Text('Year: ${vehicle['make']}'), // Changed to 'make' according to Firestore data
-              // Add more details as needed
-            ],
-          ),
+          Text('Type: ${vehicle['type']}'),
+          Text('Year: ${vehicle['make']}'),
+          Text('Id: ${vehicle.id}'),
+          // Add more details as needed
         ],
       ),
+      onTap: () {
+        
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(selectedVehicleId: vehicle.id),
+          ),
+        );
+      },
     );
   }
 }

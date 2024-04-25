@@ -1,97 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'navBar.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final String? selectedVehicleId;
+
+  const HomeScreen({Key? key, this.selectedVehicleId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavBar(), 
+      drawer: NavBar(selectedVehicleId: selectedVehicleId), 
       appBar: AppBar(
         title: const Text('Home'),
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: GridView.count(
-                crossAxisCount: 4, // Number of columns
-                mainAxisSpacing: 12, // Spacing between tiles vertically
-                crossAxisSpacing: 12, // Spacing between tiles horizontally
-                children: const [
-                  ClickableTile(
-                    title: 'Fuel Consumption',
-                    value: '50 L',
-                  ),
-                  ClickableTile(
-                    title: 'Total Passed',
-                    value: '1000 km',
-                  ),
-                  ClickableTile(
-                    title: 'Total Fuel',
-                    value: '200 L',
-                  ),
-                  ClickableTile(
-                    title: 'Total Expenses',
-                    value: '\$500',
-                  ),
-                  ClickableTile(
-                    title: 'Refill Cost',
-                    value: '\$50',
-                  ),
-                  ClickableTile(
-                    title: 'Next Refill',
-                    value: 'Next Week',
-                  ),
-                  ClickableTile(
-                    title: 'Price 1km',
-                    value: '\$0.50',
-                  ),
-                  ClickableTile(
-                    title: 'Mileage Per Day',
-                    value: '30 km/day',
-                  ),
-                ],
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 12,
               ),
+              itemCount: 16,
+              shrinkWrap: true,
+              itemBuilder: (BuildContext context, int index) {
+                if (index == 9 || index == 10 || index == 13 || index == 14) {
+                  // Return an empty container for the bottom middle 2x2 tiles
+                  return Container();
+                } else {
+                  // Display clickable tile for other tiles
+                  return ClickableTile(
+                    title: 'Tile $index',
+                    value: 'Value $index',
+                  );
+                }
+              },
             ),
           ),
-          Center(
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: const Color.fromARGB(255, 255, 255, 255), width: 3), // Thick border
-                ),
-                child: CircleAvatar(
-                  radius: 80,
-                  backgroundColor: Colors.transparent, // Transparent background
-                  child: ClipOval(
-                    child: Image.network(
-                      'https://cdn.wallpapersafari.com/22/71/8jbM2y.jpg',
-                      fit: BoxFit.cover,
-                      width: 160,
-                      height: 160,
-                    ),
-                  ),
-                ),
+          if (selectedVehicleId != null) // Check if a vehicle is selected
+            Positioned(
+              left: 125, // Adjust left position
+              top: 225, // Adjust top position
+              child: FutureBuilder<DocumentSnapshot>(
+                future: FirebaseFirestore.instance.collection('Vehicles').doc(selectedVehicleId).get(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Container(); // Return an empty container when loading
+                  }
+                  if (!snapshot.hasData) {
+                    return const Text('Vehicle not found');
+                  }
+                  final data = snapshot.data!.data() as Map<String, dynamic>;
+                  final logoUrl = data['logoUrl'];
+
+                  return CircleAvatar(
+                    radius: 80,
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: NetworkImage(logoUrl),
+                  );
+                },
               ),
-              const Padding(
-                padding: EdgeInsets.only(top: 240.0),
-                child: Text(
-                  'Aston Martin',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          ),
+            ),
         ],
       ),
     );
@@ -102,7 +74,7 @@ class ClickableTile extends StatelessWidget {
   final String title;
   final String value;
 
-  const ClickableTile({super.key, required this.title, required this.value});
+  const ClickableTile({Key? key, required this.title, required this.value}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -143,11 +115,3 @@ class ClickableTile extends StatelessWidget {
     );
   }
 }
-
-void main() {
-  runApp(const MaterialApp(
-    home: HomeScreen(),
-  ));
-}
-
-   
