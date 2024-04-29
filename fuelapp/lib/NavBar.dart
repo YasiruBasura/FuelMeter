@@ -81,7 +81,12 @@ class NavBar extends StatelessWidget {
                       leading: const Icon(Icons.playlist_add),
                       title: const Text('New Refill'),
                       onTap: () {
-                        Navigator.pushNamed(context, '/createRefill');
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CreateRefillScreen(selectedVehicleId: selectedVehicleId),
+                            ),
+                       );
                       },
                     ),
                     ListTile(

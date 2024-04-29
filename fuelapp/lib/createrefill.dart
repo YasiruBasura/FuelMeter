@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore package
-import 'navBar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CreateRefillScreen extends StatefulWidget {
-  const CreateRefillScreen({Key? key}) : super(key: key);
+  final String? selectedVehicleId;
+
+  const CreateRefillScreen({super.key, this.selectedVehicleId});
 
   @override
   _CreateRefillScreenState createState() => _CreateRefillScreenState();
@@ -18,13 +19,34 @@ class _CreateRefillScreenState extends State<CreateRefillScreen> {
   double _sumUSD = 0.0;
   String _comment = '';
   double _odometer = 0.0;
+  String _vehicleBrand = '';
+  String _vehicleModel = '';
 
-  // Firestore collection reference
   final CollectionReference _ref = FirebaseFirestore.instance.collection('Refills');
+  final CollectionReference _vehicleRef = FirebaseFirestore.instance.collection('Vehicles');
+
+  @override
+  void initState() {
+    super.initState();
+    _loadVehicleDetails();
+  }
+
+  Future<void> _loadVehicleDetails() async {
+    if (widget.selectedVehicleId != null) {
+      final DocumentSnapshot vehicleSnapshot =
+          await _vehicleRef.doc(widget.selectedVehicleId).get();
+      if (vehicleSnapshot.exists) {
+        setState(() {
+          _vehicleBrand = vehicleSnapshot['brand'];
+          _vehicleModel = vehicleSnapshot['model'];
+        });
+      }
+    }
+  }
 
   void _saveRefillData() {
-    // Create a map with the refill data
     Map<String, dynamic> refillData = {
+      'vehicleId': widget.selectedVehicleId,
       'odometer': _odometer,
       'filled': _filled,
       'price': _price,
@@ -32,15 +54,13 @@ class _CreateRefillScreenState extends State<CreateRefillScreen> {
       'date': _selectedDate.toString(),
       'time': _selectedTime.toString(),
       'fuelType': _selectedFuelType,
-      'comment': _comment, 
+      'comment': _comment,
     };
 
-    // Add refill data to Firestore
     _ref.add(refillData).then((_) {
-      // Data successfully saved
       _showSnackBar('Refill data saved successfully');
+      print(refillData);
     }).catchError((error) {
-      // Error occurred while saving data
       _showSnackBar('Failed to save refill data');
     });
   }
@@ -84,6 +104,13 @@ class _CreateRefillScreenState extends State<CreateRefillScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+             Center( // Center the text
+        child: Text(
+          'Refilling for $_vehicleBrand $_vehicleModel',
+          style: const TextStyle(fontSize: 18),
+        ),
+      ),
+            const SizedBox(height: 16.0),
             _buildInputRow(
               label: 'Odometer (km)',
               inputField: TextFormField(
@@ -96,7 +123,7 @@ class _CreateRefillScreenState extends State<CreateRefillScreen> {
                 },
               ),
             ),
-            const SizedBox(height: 16.0),
+             const SizedBox(height: 16.0),
             _buildInputRow(
               label: 'Filled (L)',
               inputField: TextFormField(
@@ -299,7 +326,3 @@ class _CreateRefillScreenState extends State<CreateRefillScreen> {
     );
   }
 }
-
-
-
-
