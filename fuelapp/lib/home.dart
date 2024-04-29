@@ -34,34 +34,34 @@ class HomeScreen extends StatelessWidget {
                 }
                  else if (index == 0) {
               // Total Filled tile
-              return ClickableTile(
-                title: 'Total Filled',
-                type: TileType.totalFilled,
-                selectedVehicleId: selectedVehicleId!,
+              return ButtonTile(
+                title: 'Refill',
+                icon:Icons.playlist_add,
+                onPressed: () => {}
               );
             }
              else if (index == 1) {
               // Total Filled tile
-              return ClickableTile(
-                title: 'Total Filled',
-                type: TileType.totalFilled,
-                selectedVehicleId: selectedVehicleId!,
+              return ButtonTile(
+                title: 'Refills',
+                icon:Icons.receipt_long,
+                onPressed: () => {}
               );
             }
              else if (index == 2) {
               // Total Filled tile
-              return ClickableTile(
-                title: 'Total Filled',
-                type: TileType.totalFilled,
-                selectedVehicleId: selectedVehicleId!,
+              return ButtonTile(
+                title: 'Details',
+                icon:Icons.storage,
+                 onPressed: () => {}
               );
             }
              else if (index == 3) {
               // Total Filled tile
-              return ClickableTile(
-                title: 'Total Filled',
-                type: TileType.totalFilled,
-                selectedVehicleId: selectedVehicleId!,
+              return ButtonTile(
+                title: 'Stats',
+                icon:Icons.stacked_bar_chart,
+                 onPressed: () => {}
               );
             }
             else if (index == 4) {
@@ -164,6 +164,48 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
+
+// Define a ButtonTile widget
+class ButtonTile extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final VoidCallback onPressed;
+
+  const ButtonTile({Key? key, required this.title, required this.icon, required this.onPressed}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 55, 55, 55), // Tile background color
+        borderRadius: BorderRadius.circular(8), // Tile border radius
+      ),
+      child: TextButton(
+        onPressed: onPressed,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: const Color.fromARGB(255, 183, 88, 0),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: const Color.fromARGB(255, 183, 88, 0), // Tile text color
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
 enum TileType { totalFilled, totalSpent, lastRefillDate, lastRefillAmount }
 
 class ClickableTile extends StatelessWidget {
@@ -246,36 +288,59 @@ String _addLeadingZero(int value) {
               break;
           }
 
-          return Container(
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 183, 88, 0), // Tile background color
-              borderRadius: BorderRadius.circular(8), // Tile border radius
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white, // Tile text color
-                    ),
+  return Container(
+  decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(8), // Tile border radius
+  ),
+  child: ClipRRect(
+    borderRadius: BorderRadius.circular(8), // ClipRRect for border radius
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(
+          flex: 1,
+          child: Container(
+            color: const Color.fromARGB(255, 55, 55,55), // Top section background color
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8), // Add horizontal padding
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white, // Tile text color
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    content,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      color: Colors.white, // Tile text color
-                    ),
-                  ),
-                ],
+                  textAlign: TextAlign.center, // Align text to center
+                ),
               ),
             ),
-          );
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Container(
+            color: const Color.fromARGB(255, 44, 44,44), // Bottom section background color
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8), // Add horizontal padding
+              child: Center(
+                child: Text(
+                  content,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.white, // Tile text color
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  ),
+);
+
+
         },
       ),
     );
