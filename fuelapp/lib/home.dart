@@ -25,7 +25,7 @@ class HomeScreen extends StatelessWidget {
             mainAxisSpacing: 12,
             crossAxisSpacing: 12,
           ),
-          itemCount: 16,
+          itemCount: selectedVehicleId != null ? 16 : 4,
           shrinkWrap: true,
           itemBuilder: (BuildContext context, int index) {
              if (index == 9 || index == 10 || index == 13 || index == 14) {
@@ -346,4 +346,14 @@ String _addLeadingZero(int value) {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
 
