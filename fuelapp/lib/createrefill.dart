@@ -65,7 +65,7 @@ class _CreateRefillScreenState extends State<CreateRefillScreen> {
     });
   }
 
-  Future<void> _selectDate(BuildContext context) async {
+ Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: _selectedDate,
@@ -107,7 +107,7 @@ class _CreateRefillScreenState extends State<CreateRefillScreen> {
              Center( // Center the text
         child: Text(
           'Refilling for $_vehicleBrand $_vehicleModel',
-          style: const TextStyle(fontSize: 18),
+          style: const TextStyle(fontSize: 17),
         ),
       ),
             const SizedBox(height: 16.0),
@@ -163,14 +163,24 @@ class _CreateRefillScreenState extends State<CreateRefillScreen> {
             _buildDateRow(),
             const SizedBox(height: 16.0),
             _buildInputRow(
-              label: 'Fuel Type',
-              inputField: ElevatedButton(
-                onPressed: () {
-                  _showFuelTypeDialog(context);
-                },
-                child: Text(_selectedFuelType),
-              ),
-            ),
+  label: 'Fuel Type',
+  inputField: ElevatedButton(
+    onPressed: () {
+      _showFuelTypeDialog(context);
+    },
+    style: ButtonStyle(
+      backgroundColor: MaterialStateProperty.all<Color>(
+        Color.fromARGB(255, 55, 55, 55), 
+      ),
+      foregroundColor: MaterialStateProperty.all<Color>(
+        Color.fromARGB(255, 183, 88, 0),
+      ),
+    ),
+    child: Text(_selectedFuelType),
+  ),
+  showBorder: false, // Don't show border for this row
+),
+
             const SizedBox(height: 16.0),
             _buildInputRow(
               label: 'Comment',
@@ -213,58 +223,82 @@ class _CreateRefillScreenState extends State<CreateRefillScreen> {
     });
   }
 
-  Widget _buildInputRow({required String label, required Widget inputField}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 16.0),
-        ),
-        Container(
-          width: 150,
-          height: 50,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: const Color.fromARGB(255, 159, 159, 159),
-            ),
-            borderRadius: BorderRadius.circular(8.0),
+Widget _buildInputRow({required String label, required Widget inputField, bool showBorder = true}) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Text(
+        label,
+        style: const TextStyle(fontSize: 16.0),
+      ),
+      Container(
+        width: 150,
+        height: 50,
+        decoration: showBorder ? BoxDecoration(
+          border: Border.all(
+            color: const Color.fromARGB(255, 159, 159, 159),
           ),
+          borderRadius: BorderRadius.circular(8.0),
+        ) : null,
+        child: Center( // Center the input field horizontally and vertically
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: SizedBox(
-                width: 150,
-                child: inputField,
-              ),
-            ),
+            child: inputField,
           ),
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
 
-  Widget _buildDateRow() {
-    return Row(
-      children: [
-        const Text(
-          'Date',
-          style: TextStyle(fontSize: 16.0),
+
+
+
+ Widget _buildDateRow() {
+  return Row(
+    children: [
+      const Text(
+        'Date',
+        style: TextStyle(fontSize: 16.0),
+      ),
+      const SizedBox(width: 16.0),
+      Expanded(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ElevatedButton(
+              onPressed: () => _selectDate(context),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                  Color.fromARGB(255, 55, 55, 55), 
+                ),
+                foregroundColor: MaterialStateProperty.all<Color>(
+                  Color.fromARGB(255, 183, 88, 0),
+                ),
+              ),
+              child: Text('${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}'),
+            ),
+            const SizedBox(width: 8.0),
+            ElevatedButton(
+              onPressed: () => _selectTime(context),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                  Color.fromARGB(255, 55, 55, 55), 
+                ),
+                foregroundColor: MaterialStateProperty.all<Color>(
+                  Color.fromARGB(255, 183, 88, 0),
+                ),
+              ),
+              child: Text('${_selectedTime.hour}:${_selectedTime.minute}'),
+            ),
+          ],
         ),
-        const SizedBox(width: 16.0),
-        ElevatedButton(
-          onPressed: () => _selectDate(context),
-          child: Text('${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}'),
-        ),
-        const SizedBox(width: 8.0),
-        ElevatedButton(
-          onPressed: () => _selectTime(context),
-          child: Text('${_selectedTime.hour}:${_selectedTime.minute}'),
-        ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
+
+
 
   InputDecoration _buildInputDecoration() {
     return const InputDecoration(
@@ -273,52 +307,57 @@ class _CreateRefillScreenState extends State<CreateRefillScreen> {
     );
   }
 
-  Future<void> _showFuelTypeDialog(BuildContext context) async {
-    final String? selectedFuelType = await showDialog<String>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Select Fuel Type'),
-          content: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.5, // Set width to 50% of screen width
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                DropdownButton<String>(
-                  value: _selectedFuelType,
-                  onChanged: (String? newValue) {
-                    Navigator.of(context).pop(newValue);
-                  },
-                  items: <String>['95', '98', 'Diesel', 'Gas']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-                const SizedBox(height: 16.0), // Add some spacing below the dropdown
-              ],
-            ),
+ Future<void> _showFuelTypeDialog(BuildContext context) async {
+  final String? selectedFuelType = await showDialog<String>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        backgroundColor:  Color.fromARGB(255, 55, 55, 55), 
+        title: const Text('Select Fuel Type'),
+        content: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.5, // Set width to 50% of screen width
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DropdownButton<String>(
+                value: _selectedFuelType,
+                onChanged: (String? newValue) {
+                  Navigator.of(context).pop(newValue);
+                },
+                items: <String>['95', '98', 'Diesel', 'Gas']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 16.0), // Add some spacing below the dropdown
+            ],
           ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-          ],
-        );
-      },
-    );
+        ),
+        actions: <Widget>[
+  TextButton(
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+    child: const Text(
+      'Cancel',
+      style: TextStyle(color: Colors.white), // Change text color here
+    ),
+  ),
+],
+      );
+    },
+  );
 
-    if (selectedFuelType != null) {
-      setState(() {
-        _selectedFuelType = selectedFuelType;
-      });
-    }
+  if (selectedFuelType != null) {
+    setState(() {
+      _selectedFuelType = selectedFuelType;
+    });
   }
+}
+
 
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
