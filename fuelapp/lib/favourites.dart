@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'updaterefill.dart'; // Import the update refill screen
 
 class FavoritesScreen extends StatelessWidget {
   final String? selectedVehicleId;
@@ -76,64 +77,79 @@ class FavoritesScreen extends StatelessWidget {
                       final docId = refills[index].id; // Get document ID
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 16),
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 55, 55, 55),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: ListTile(
-                            title: Text('${refill['date']}'),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Filled: ${refill['filled']}'),
-                                Text('Fuel Type: ${refill['fuelType']}'),
-                                Text('Odometer: ${refill['odometer']}'),
-                                Text('Price: ${refill['price']}'),
-                                Text('Sum: ${refill['sum']}'),
-                                Text('Time: ${refill['time']}'),
-                              ],
+                        child: GestureDetector(
+                          onTap: () {
+                            // Navigate to update screen and pass refillId
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => UpdateRefillScreen(refillId: docId),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 16),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 55, 55, 55),
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                            trailing: GestureDetector(
-                              onTap: () {
-                                // Show confirmation dialog
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: const Text('Delete Refill'),
-                                    content: const Text('Are you sure you want to delete this refill?'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text('Cancel'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          // Delete the refill item
-                                          FirebaseFirestore.instance
-                                              .collection('Refills')
-                                              .doc(docId)
-                                              .delete();
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text(
-                                          'Delete',
-                                          style: TextStyle(
-                                            color:Color.fromARGB(255, 183, 88, 0),
+                            child: ListTile(
+                              title: Text('${refill['date']}'),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Filled: ${refill['filled']}'),
+                                  Text('Fuel Type: ${refill['fuelType']}'),
+                                  Text('Odometer: ${refill['odometer']}'),
+                                  Text('Price: ${refill['price']}'),
+                                  Text('Sum: ${refill['sum']}'),
+                                  Text('Time: ${refill['time']}'),
+                                ],
+                              ),
+                              trailing: GestureDetector(
+                                onTap: () {
+                                  // Show confirmation dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      backgroundColor: Color.fromARGB(255, 55, 55, 55), // Set background color
+                                      title: const Text('Delete Refill'),
+                                      content: const Text('Are you sure you want to delete this refill?'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          style: ButtonStyle(
+                                            foregroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 255, 255, 255)), // Change text color of cancel button
+                                          ),
+                                          child: const Text('Cancel'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            // Delete the refill item
+                                            FirebaseFirestore.instance
+                                                .collection('Refills')
+                                                .doc(docId)
+                                                .delete();
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text(
+                                            'Delete',
+                                            style: TextStyle(
+                                              color: Color.fromARGB(255, 183, 88, 0),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
+                                  );
+                                },
+                                child: const Text(
+                                  'Delete',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 183, 88, 0),
                                   ),
-                                );
-                              },
-                              child: const Text(
-                                'Delete',
-                                style: TextStyle(
-                                  color: Color.fromARGB(255, 183, 88, 0),
                                 ),
                               ),
                             ),
