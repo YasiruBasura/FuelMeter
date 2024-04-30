@@ -170,10 +170,10 @@ class _CreateRefillScreenState extends State<CreateRefillScreen> {
     },
     style: ButtonStyle(
       backgroundColor: MaterialStateProperty.all<Color>(
-        Color.fromARGB(255, 55, 55, 55), 
+        const Color.fromARGB(255, 55, 55, 55), 
       ),
       foregroundColor: MaterialStateProperty.all<Color>(
-        Color.fromARGB(255, 183, 88, 0),
+        const Color.fromARGB(255, 183, 88, 0),
       ),
     ),
     child: Text(_selectedFuelType),
@@ -270,10 +270,10 @@ Widget _buildInputRow({required String label, required Widget inputField, bool s
               onPressed: () => _selectDate(context),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(
-                  Color.fromARGB(255, 55, 55, 55), 
+                  const Color.fromARGB(255, 55, 55, 55), 
                 ),
                 foregroundColor: MaterialStateProperty.all<Color>(
-                  Color.fromARGB(255, 183, 88, 0),
+                  const Color.fromARGB(255, 183, 88, 0),
                 ),
               ),
               child: Text('${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}'),
@@ -283,10 +283,10 @@ Widget _buildInputRow({required String label, required Widget inputField, bool s
               onPressed: () => _selectTime(context),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(
-                  Color.fromARGB(255, 55, 55, 55), 
+                  const Color.fromARGB(255, 55, 55, 55), 
                 ),
                 foregroundColor: MaterialStateProperty.all<Color>(
-                  Color.fromARGB(255, 183, 88, 0),
+                  const Color.fromARGB(255, 183, 88, 0),
                 ),
               ),
               child: Text('${_selectedTime.hour}:${_selectedTime.minute}'),
@@ -312,7 +312,7 @@ Widget _buildInputRow({required String label, required Widget inputField, bool s
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        backgroundColor:  Color.fromARGB(255, 55, 55, 55), 
+        backgroundColor:  const Color.fromARGB(255, 55, 55, 55), 
         title: const Text('Select Fuel Type'),
         content: SizedBox(
           width: MediaQuery.of(context).size.width * 0.5, // Set width to 50% of screen width
