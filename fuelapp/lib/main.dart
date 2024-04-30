@@ -20,6 +20,11 @@ class MyApp extends StatelessWidget {
       title: 'Your App',
       theme: ThemeData.dark().copyWith(
       scaffoldBackgroundColor: const Color.fromARGB(255, 28, 28, 28), // Adjust this color as needed
+       inputDecorationTheme: const InputDecorationTheme(
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color.fromARGB(255, 183, 88, 0)),
+          ),
+        ),
     ),
     
       initialRoute: '/',

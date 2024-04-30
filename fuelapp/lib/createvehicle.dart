@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'settings.dart';
 
 class CreateVehicleScreen extends StatefulWidget {
-  const CreateVehicleScreen({super.key});
+  const CreateVehicleScreen({Key? key}) : super(key: key);
 
   @override
   _CreateVehicleScreenState createState() => _CreateVehicleScreenState();
@@ -17,6 +17,22 @@ class _CreateVehicleScreenState extends State<CreateVehicleScreen> {
   String _logoUrl = '';
 
   final CollectionReference _ref = FirebaseFirestore.instance.collection('Vehicles');
+
+  final _brandFocusNode = FocusNode();
+  final _modelFocusNode = FocusNode();
+  final _makeFocusNode = FocusNode();
+  final _typeFocusNode = FocusNode();
+  final _logoUrlFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _brandFocusNode.dispose();
+    _modelFocusNode.dispose();
+    _makeFocusNode.dispose();
+    _typeFocusNode.dispose();
+    _logoUrlFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +48,8 @@ class _CreateVehicleScreenState extends State<CreateVehicleScreen> {
             _buildInputRow(
               label: 'Brand',
               inputField: TextFormField(
-                decoration: _buildInputDecoration(),
+                focusNode: _brandFocusNode, // Assign focus node
+                decoration: _buildInputDecoration(focused: _brandFocusNode.hasFocus),
                 onChanged: (value) {
                   setState(() {
                     _brand = value;
@@ -44,7 +61,8 @@ class _CreateVehicleScreenState extends State<CreateVehicleScreen> {
             _buildInputRow(
               label: 'Model',
               inputField: TextFormField(
-                decoration: _buildInputDecoration(),
+                focusNode: _modelFocusNode, // Assign focus node
+                decoration: _buildInputDecoration(focused: _modelFocusNode.hasFocus),
                 onChanged: (value) {
                   setState(() {
                     _model = value;
@@ -56,7 +74,8 @@ class _CreateVehicleScreenState extends State<CreateVehicleScreen> {
             _buildInputRow(
               label: 'Make(Year)',
               inputField: TextFormField(
-                decoration: _buildInputDecoration(),
+                focusNode: _makeFocusNode, // Assign focus node
+                decoration: _buildInputDecoration(focused: _makeFocusNode.hasFocus),
                 onChanged: (value) {
                   setState(() {
                     _make = value;
@@ -68,7 +87,8 @@ class _CreateVehicleScreenState extends State<CreateVehicleScreen> {
             _buildInputRow(
               label: 'Type',
               inputField: TextFormField(
-                decoration: _buildInputDecoration(),
+                focusNode: _typeFocusNode, // Assign focus node
+                decoration: _buildInputDecoration(focused: _typeFocusNode.hasFocus),
                 onChanged: (value) {
                   setState(() {
                     _type = value;
@@ -80,7 +100,8 @@ class _CreateVehicleScreenState extends State<CreateVehicleScreen> {
             _buildInputRow(
               label: 'Logo URL',
               inputField: TextFormField(
-                decoration: _buildInputDecoration(),
+                focusNode: _logoUrlFocusNode, // Assign focus node
+                decoration: _buildInputDecoration(focused: _logoUrlFocusNode.hasFocus),
                 onChanged: (value) {
                   setState(() {
                     _logoUrl = value;
@@ -111,6 +132,37 @@ class _CreateVehicleScreenState extends State<CreateVehicleScreen> {
     );
   }
 
+InputDecoration _buildInputDecoration({required bool focused}) {
+  return InputDecoration(
+    contentPadding: const EdgeInsets.all(8.0), // Padding inside the input field
+    border: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: focused ? const Color.fromARGB(255, 183, 88, 0) : const Color.fromARGB(255, 159, 159, 159),
+        width: focused ? 3.0 : 1.0, // Set border width based on focus state
+      ),
+      borderRadius: BorderRadius.circular(8.0),
+    ),
+  );
+}
+
+
+  Widget _buildInputRow({required String label, required Widget inputField}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(fontSize: 16.0),
+        ),
+        Container(
+          width: 150,
+          height: 50,
+          child: inputField,
+        ),
+      ],
+    );
+  }
+
   void _saveVehicleData() {
     // Create a map with the vehicle data
     Map<String, dynamic> vehicleData = {
@@ -134,45 +186,6 @@ class _CreateVehicleScreenState extends State<CreateVehicleScreen> {
       // Error occurred while saving data
       _showSnackBar('Failed to save vehicle data');
     });
-  }
-
-  Widget _buildInputRow({required String label, required Widget inputField}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 16.0),
-        ),
-        Container(
-          width: 150,
-          height: 50,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: const Color.fromARGB(255, 159, 159, 159),
-            ),
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: SizedBox(
-                width: 150,
-                child: inputField,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  InputDecoration _buildInputDecoration() {
-    return const InputDecoration(
-      contentPadding: EdgeInsets.all(8.0), // Padding inside the input field
-      border: InputBorder.none, // Hide default border
-    );
   }
 
   void _showSnackBar(String message) {
