@@ -21,12 +21,18 @@ class _UpdateRefillScreenState extends State<UpdateRefillScreen> {
   double _odometer = 0.0;
 
   final CollectionReference _ref = FirebaseFirestore.instance.collection('Refills');
+bool _isLoaded = false;
 
 @override
-@override
 void initState() {
+
+  _loadRefillDetails().then((_){
+    setState(() {
+      _isLoaded = true;
+    });
+  });
   super.initState();
-  _loadRefillDetails();
+  
 }
 
  Future<void> _loadRefillDetails() async {
@@ -113,7 +119,7 @@ TimeOfDay _parseTime(String time) {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
+        child: _isLoaded ? Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 16.0),
@@ -204,9 +210,10 @@ TimeOfDay _parseTime(String time) {
               ),
             ),
           ],
-        ),
+        )
+      : const Center(child: CircularProgressIndicator()
       ),
-    );
+    ));
   }
 
   void _updateSumUSD() {
