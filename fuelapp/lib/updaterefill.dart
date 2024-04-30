@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'favourites.dart';
 
 class UpdateRefillScreen extends StatefulWidget {
   final String? refillId;
@@ -197,7 +198,10 @@ TimeOfDay _parseTime(String time) {
               child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7, // Fill 70% of available width
                 child: ElevatedButton(
-                  onPressed: _updateRefillData,
+                  onPressed: (){ 
+                  _updateRefillData();
+                   Navigator.pop(context);
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 183, 88, 0),
                   ),

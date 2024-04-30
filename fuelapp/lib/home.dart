@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'navBar.dart';
 
-
 class HomeScreen extends StatelessWidget {
   final String? selectedVehicleId;
 
@@ -11,159 +10,141 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavBar(selectedVehicleId: selectedVehicleId), 
+      drawer: NavBar(selectedVehicleId: selectedVehicleId),
       appBar: AppBar(
         title: const Text('Home'),
       ),
-      body:Stack(
-        children: [ 
-          Padding(
-        padding: const EdgeInsets.all(12),
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
-            mainAxisSpacing: 12,
-            crossAxisSpacing: 12,
-          ),
-          itemCount: selectedVehicleId != null ? 16 : 4,
-          shrinkWrap: true,
-          itemBuilder: (BuildContext context, int index) {
-             if (index == 9 || index == 10 || index == 13 || index == 14) {
-                  // Return an empty container for the bottom middle 2x2 tiles
-                  return Container();
-                }
-                 else if (index == 0) {
-              // Total Filled tile
-              return ButtonTile(
-                title: 'Refill',
-                icon:Icons.playlist_add,
-                onPressed: () => {}
-              );
-            }
-             else if (index == 1) {
-              // Total Filled tile
-              return ButtonTile(
-                title: 'Refills',
-                icon:Icons.receipt_long,
-                onPressed: () => {}
-              );
-            }
-             else if (index == 2) {
-              // Total Filled tile
-              return ButtonTile(
-                title: 'Details',
-                icon:Icons.storage,
-                 onPressed: () => {}
-              );
-            }
-             else if (index == 3) {
-              // Total Filled tile
-              return ButtonTile(
-                title: 'Stats',
-                icon:Icons.stacked_bar_chart,
-                 onPressed: () => {}
-              );
-            }
-            else if (index == 4) {
-              // Total Filled tile
-              return ClickableTile(
-                title: 'Total Filled',
-                type: TileType.totalFilled,
-                selectedVehicleId: selectedVehicleId!,
-              );
-            } else if (index == 5) {
-              // Total Spent tile
-              return ClickableTile(
-                title: 'Total Spent',
-                type: TileType.totalSpent,
-                selectedVehicleId: selectedVehicleId!,
-              );
-            } else if (index == 6) {
-              // Last Refill Date tile
-              return ClickableTile(
-                title: 'Last Refill Date',
-                type: TileType.lastRefillDate,
-                selectedVehicleId: selectedVehicleId!,
-              );
-            } else if (index == 7) {
-              // Last Refill Amount tile
-              return ClickableTile(
-                title: 'Last Refill Amount',
-                type: TileType.lastRefillAmount,
-                selectedVehicleId: selectedVehicleId!,
-              );
-            } 
-            else if (index == 8) {
-              // Last Refill Amount tile
-              return ClickableTile(
-                title: 'Total Refills',
-                type: TileType.totalRefills,
-                selectedVehicleId: selectedVehicleId!,
-              );
-            }
-            else if (index == 11) {
-              // Last Refill Amount tile
-              return ClickableTile(
-                title: 'Total Travelled',
-                type: TileType.totalTravelled,
-                selectedVehicleId: selectedVehicleId!,
-              );
-            }
-            else if (index == 12) {
-              // Last Refill Amount tile
-              return ClickableTile(
-                title: 'Price /km',
-                type: TileType.pricePerKm,
-                selectedVehicleId: selectedVehicleId!,
-              );
-            }
-            else if (index == 15) {
-              // Last Refill Amount tile
-              return ClickableTile(
-                title: 'Estimated usage',
-                type: TileType.lastRefillAmount,
-                selectedVehicleId: selectedVehicleId!,
-              );
-            }else {
-              // Return an empty container for other tiles
-              return Container();
-            }
-          },
-        ),
-          ),
-   if (selectedVehicleId != null) // Check if a vehicle is selected
-            Positioned(
-              left: 125, // Adjust left position
-              top: 215, // Adjust top position
-              child: FutureBuilder<DocumentSnapshot>(
-                future: FirebaseFirestore.instance.collection('Vehicles').doc(selectedVehicleId).get(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Container(); // Return an empty container when loading
-                  }
-                  if (!snapshot.hasData) {
-                    return const Text('Vehicle not found');
-                  }
-                  final data = snapshot.data!.data() as Map<String, dynamic>;
-                  final logoUrl = data['logoUrl'];
-
-                  return CircleAvatar(
-                    radius: 80,
-                    backgroundColor: Colors.transparent,
-                    backgroundImage: NetworkImage(logoUrl),
-                  );
-                },
-              ),
+      body: Stack(children: [
+        Padding(
+          padding: const EdgeInsets.all(12),
+          child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
             ),
-        
-        ]
+            itemCount: selectedVehicleId != null ? 16 : 4,
+            shrinkWrap: true,
+            itemBuilder: (BuildContext context, int index) {
+              if (index == 9 || index == 10 || index == 13 || index == 14) {
+                // Return an empty container for the bottom middle 2x2 tiles
+                return Container();
+              } else if (index == 0) {
+                // Total Filled tile
+                return ButtonTile(
+                    title: 'Refill',
+                    icon: Icons.playlist_add,
+                    onPressed: () => {});
+              } else if (index == 1) {
+                // Total Filled tile
+                return ButtonTile(
+                    title: 'Refills',
+                    icon: Icons.receipt_long,
+                    onPressed: () => {});
+              } else if (index == 2) {
+                // Total Filled tile
+                return ButtonTile(
+                    title: 'Details', icon: Icons.storage, onPressed: () => {});
+              } else if (index == 3) {
+                // Total Filled tile
+                return ButtonTile(
+                    title: 'Stats',
+                    icon: Icons.stacked_bar_chart,
+                    onPressed: () => {});
+              } else if (index == 4) {
+                // Total Filled tile
+                return ClickableTile(
+                  title: 'Total Filled',
+                  type: TileType.totalFilled,
+                  selectedVehicleId: selectedVehicleId!,
+                );
+              } else if (index == 5) {
+                // Total Spent tile
+                return ClickableTile(
+                  title: 'Total Spent',
+                  type: TileType.totalSpent,
+                  selectedVehicleId: selectedVehicleId!,
+                );
+              } else if (index == 6) {
+                // Last Refill Date tile
+                return ClickableTile(
+                  title: 'Last Refill Date',
+                  type: TileType.lastRefillDate,
+                  selectedVehicleId: selectedVehicleId!,
+                );
+              } else if (index == 7) {
+                // Last Refill Amount tile
+                return ClickableTile(
+                  title: 'Last Refill Amount',
+                  type: TileType.lastRefillAmount,
+                  selectedVehicleId: selectedVehicleId!,
+                );
+              } else if (index == 8) {
+                // Last Refill Amount tile
+                return ClickableTile(
+                  title: 'Total Refills',
+                  type: TileType.totalRefills,
+                  selectedVehicleId: selectedVehicleId!,
+                );
+              } else if (index == 11) {
+                // Last Refill Amount tile
+                return ClickableTile(
+                  title: 'Total Travelled',
+                  type: TileType.totalTravelled,
+                  selectedVehicleId: selectedVehicleId!,
+                );
+              } else if (index == 12) {
+                // Last Refill Amount tile
+                return ClickableTile(
+                  title: 'Price /km',
+                  type: TileType.pricePerKm,
+                  selectedVehicleId: selectedVehicleId!,
+                );
+              } else if (index == 15) {
+                // Last Refill Amount tile
+                return ClickableTile(
+                  title: 'Estimated usage',
+                  type: TileType.lastRefillAmount,
+                  selectedVehicleId: selectedVehicleId!,
+                );
+              } else {
+                // Return an empty container for other tiles
+                return Container();
+              }
+            },
+          ),
+        ),
+        if (selectedVehicleId != null) // Check if a vehicle is selected
+          Positioned(
+            left: 125, // Adjust left position
+            top: 215, // Adjust top position
+            child: FutureBuilder<DocumentSnapshot>(
+              future: FirebaseFirestore.instance
+                  .collection('Vehicles')
+                  .doc(selectedVehicleId)
+                  .get(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Container(); // Return an empty container when loading
+                }
+                if (!snapshot.hasData) {
+                  return const Text('Vehicle not found');
+                }
+                final data = snapshot.data!.data() as Map<String, dynamic>;
+                final logoUrl = data['logoUrl'];
 
-
-      ),
+                return CircleAvatar(
+                  radius: 80,
+                  backgroundColor: Colors.transparent,
+                  backgroundImage: NetworkImage(logoUrl),
+                );
+              },
+            ),
+          ),
+      ]),
     );
   }
 }
-
 
 // Define a ButtonTile widget
 class ButtonTile extends StatelessWidget {
@@ -171,7 +152,11 @@ class ButtonTile extends StatelessWidget {
   final IconData icon;
   final VoidCallback onPressed;
 
-  const ButtonTile({super.key, required this.title, required this.icon, required this.onPressed});
+  const ButtonTile(
+      {super.key,
+      required this.title,
+      required this.icon,
+      required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -205,10 +190,10 @@ class ButtonTile extends StatelessWidget {
   }
 }
 
-enum TileType { 
-  totalFilled, 
-  totalSpent, 
-  lastRefillDate, 
+enum TileType {
+  totalFilled,
+  totalSpent,
+  lastRefillDate,
   lastRefillAmount,
   totalRefills,
   totalTravelled,
@@ -242,7 +227,10 @@ class ClickableTile extends StatelessWidget {
         // Handle tile tap here
       },
       child: FutureBuilder<QuerySnapshot>(
-        future: FirebaseFirestore.instance.collection('Refills').where('vehicleId', isEqualTo: selectedVehicleId).get(),
+        future: FirebaseFirestore.instance
+            .collection('Refills')
+            .where('vehicleId', isEqualTo: selectedVehicleId)
+            .get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(); // Return an empty container when loading
@@ -262,19 +250,21 @@ class ClickableTile extends StatelessWidget {
           double totalTravelled = 0;
           double pricePerKm = 0;
 
-refills.sort((a, b) {
-  DateTime dateA = DateTime.parse((a as Map<String, dynamic>)['date']);
-  DateTime dateB = DateTime.parse((b as Map<String, dynamic>)['date']);
-  return dateA.compareTo(dateB);
-});
+          refills.sort((a, b) {
+            DateTime dateA =
+                DateTime.parse((a as Map<String, dynamic>)['date']);
+            DateTime dateB =
+                DateTime.parse((b as Map<String, dynamic>)['date']);
+            return dateA.compareTo(dateB);
+          });
 
-if (refills.length > 1) {
-  double oldestOdometer = (refills.first as Map<String, dynamic>)['odometer'];
-  double latestOdometer = (refills.last as Map<String, dynamic>)['odometer'];
-  totalTravelled = latestOdometer - oldestOdometer;
-}
-
-
+          if (refills.length > 1) {
+            double oldestOdometer =
+                (refills.first as Map<String, dynamic>)['odometer'];
+            double latestOdometer =
+                (refills.last as Map<String, dynamic>)['odometer'];
+            totalTravelled = latestOdometer - oldestOdometer;
+          }
 
           for (var refill in refills) {
             if (refill != null && refill is Map<String, dynamic>) {
@@ -290,7 +280,9 @@ if (refills.length > 1) {
               }
               if (dateStr != null) {
                 DateTime? refillDate = DateTime.tryParse(dateStr);
-                if (refillDate != null && (lastRefillDate == null || refillDate.isAfter(lastRefillDate))) {
+                if (refillDate != null &&
+                    (lastRefillDate == null ||
+                        refillDate.isAfter(lastRefillDate))) {
                   lastRefillDate = refillDate;
                   if (sum != null) {
                     lastRefillAmount = sum;
@@ -314,7 +306,8 @@ if (refills.length > 1) {
               content = '$totalSpent USD';
               break;
             case TileType.lastRefillDate:
-              content = lastRefillDate != null ? formatDate(lastRefillDate!) : 'N/A';
+              content =
+                  lastRefillDate != null ? formatDate(lastRefillDate!) : 'N/A';
               break;
             case TileType.lastRefillAmount:
               content = '$lastRefillAmount USD';
@@ -323,10 +316,14 @@ if (refills.length > 1) {
               content = '$totalRefills';
               break;
             case TileType.totalTravelled:
-              content = totalTravelled != 0 ? '${totalTravelled.toStringAsFixed(2)} km' : 'N/A';
+              content = totalTravelled != 0
+                  ? '${totalTravelled.toStringAsFixed(2)} km'
+                  : 'N/A';
               break;
             case TileType.pricePerKm:
-              content = pricePerKm != 0 ? '${pricePerKm.toStringAsFixed(2)} USD/km' : 'N/A';
+              content = pricePerKm != 0
+                  ? '${pricePerKm.toStringAsFixed(2)} USD/km'
+                  : 'N/A';
               break;
           }
 
@@ -335,17 +332,20 @@ if (refills.length > 1) {
               borderRadius: BorderRadius.circular(8), // Tile border radius
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(8), // ClipRRect for border radius
+              borderRadius:
+                  BorderRadius.circular(8), // ClipRRect for border radius
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Expanded(
                     flex: 1,
                     child: Container(
-                      color: const Color.fromARGB(255, 55, 55, 55), // Top section background color
+                      color: const Color.fromARGB(
+                          255, 55, 55, 55), // Top section background color
                       child: Center(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8), // Add horizontal padding
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8), // Add horizontal padding
                           child: Text(
                             title,
                             style: const TextStyle(
@@ -362,9 +362,11 @@ if (refills.length > 1) {
                   Expanded(
                     flex: 1,
                     child: Container(
-                      color: const Color.fromARGB(255, 44, 44, 44), // Bottom section background color
+                      color: const Color.fromARGB(
+                          255, 44, 44, 44), // Bottom section background color
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8), // Add horizontal padding
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8), // Add horizontal padding
                         child: Center(
                           child: Text(
                             content,
@@ -386,3 +388,13 @@ if (refills.length > 1) {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+

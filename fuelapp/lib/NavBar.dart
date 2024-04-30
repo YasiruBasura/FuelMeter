@@ -69,6 +69,7 @@ class NavBar extends StatelessWidget {
                       leading: const Icon(Icons.receipt_long),
                       title: const Text('Refills'),
                       onTap: () {
+                        Navigator.pop(context);
                        Navigator.push(
                             context,
                             MaterialPageRoute(
