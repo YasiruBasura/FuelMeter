@@ -5,12 +5,12 @@ import 'favourites.dart';
 
 class NavBar extends StatelessWidget {
   final String? selectedVehicleId;
-  const NavBar({Key? key, this.selectedVehicleId}) : super(key: key);
+  const NavBar({super.key, this.selectedVehicleId});
   final selectedRefillId = null;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width * 0.6,
       child: Drawer(
         child: Column(

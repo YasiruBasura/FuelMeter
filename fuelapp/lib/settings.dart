@@ -6,7 +6,7 @@ import 'createvehicle.dart';
 
 class SettingsScreen extends StatelessWidget {
 
-  const SettingsScreen({Key? key,});
+  const SettingsScreen({super.key, Key? customKey,});
 
   @override
   Widget build(BuildContext context) {

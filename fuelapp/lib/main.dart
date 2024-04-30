@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Your App',
       theme: ThemeData.dark().copyWith(
-      scaffoldBackgroundColor: Color.fromARGB(255, 28, 28, 28), // Adjust this color as needed
+      scaffoldBackgroundColor: const Color.fromARGB(255, 28, 28, 28), // Adjust this color as needed
     ),
     
       initialRoute: '/',

@@ -5,7 +5,7 @@ import 'updaterefill.dart'; // Import the update refill screen
 class FavoritesScreen extends StatelessWidget {
   final String? selectedVehicleId;
 
-  const FavoritesScreen({Key? key, this.selectedVehicleId}) : super(key: key);
+  const FavoritesScreen({super.key, this.selectedVehicleId});
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +112,7 @@ class FavoritesScreen extends StatelessWidget {
                                   showDialog(
                                     context: context,
                                     builder: (context) => AlertDialog(
-                                      backgroundColor: Color.fromARGB(255, 55, 55, 55), // Set background color
+                                      backgroundColor: const Color.fromARGB(255, 55, 55, 55), // Set background color
                                       title: const Text('Delete Refill'),
                                       content: const Text('Are you sure you want to delete this refill?'),
                                       actions: [

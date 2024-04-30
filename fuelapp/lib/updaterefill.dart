@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UpdateRefillScreen extends StatefulWidget {
   final String? refillId;
 
-  const UpdateRefillScreen({Key? key, this.refillId}) : super(key: key);
+  const UpdateRefillScreen({super.key, this.refillId});
 
   @override
   _UpdateRefillScreenState createState() => _UpdateRefillScreenState();
@@ -166,10 +166,10 @@ TimeOfDay _parseTime(String time) {
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
-                    Color.fromARGB(255, 55, 55, 55),
+                    const Color.fromARGB(255, 55, 55, 55),
                   ),
                   foregroundColor: MaterialStateProperty.all<Color>(
-                    Color.fromARGB(255, 183, 88, 0),
+                    const Color.fromARGB(255, 183, 88, 0),
                   ),
                 ),
                 child: Text(_selectedFuelType),
@@ -211,7 +211,7 @@ TimeOfDay _parseTime(String time) {
 
   void _updateSumUSD() {
     setState(() {
-      _sumUSD = _price * _filled;
+      _sumUSD = _price  * _filled;
     });
   }
 
@@ -224,6 +224,7 @@ TimeOfDay _parseTime(String time) {
   Widget? inputField,
 }) {
    print('Initial Value: $initialValue');
+  
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
@@ -248,7 +249,7 @@ TimeOfDay _parseTime(String time) {
             child: inputField ??
                 TextFormField(
                   initialValue: initialValue, // Set initial value here
-                  
+                  // controller: TextEditingController(text: initialValue),
                   enabled: true,
                   onChanged: onChanged,
                   keyboardType: TextInputType.number,
@@ -281,10 +282,10 @@ TimeOfDay _parseTime(String time) {
                 onPressed: () => _selectDate(context),
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
-                    Color.fromARGB(255, 55, 55, 55),
+                    const Color.fromARGB(255, 55, 55, 55),
                   ),
                   foregroundColor: MaterialStateProperty.all<Color>(
-                    Color.fromARGB(255, 183, 88, 0),
+                    const Color.fromARGB(255, 183, 88, 0),
                   ),
                 ),
                 child: Text('${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}'),
@@ -294,10 +295,10 @@ TimeOfDay _parseTime(String time) {
                 onPressed: () => _selectTime(context),
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
-                    Color.fromARGB(255, 55, 55, 55),
+                    const Color.fromARGB(255, 55, 55, 55),
                   ),
                   foregroundColor: MaterialStateProperty.all<Color>(
-                    Color.fromARGB(255, 183, 88, 0),
+                    const Color.fromARGB(255, 183, 88, 0),
                   ),
                 ),
                 child: Text('${_selectedTime.hour}:${_selectedTime.minute}'),
@@ -314,7 +315,7 @@ TimeOfDay _parseTime(String time) {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Color.fromARGB(255, 55, 55, 55),
+          backgroundColor: const Color.fromARGB(255, 55, 55, 55),
           title: const Text('Select Fuel Type'),
           content: SizedBox(
             width: MediaQuery.of(context).size.width * 0.5,

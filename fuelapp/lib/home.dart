@@ -171,7 +171,7 @@ class ButtonTile extends StatelessWidget {
   final IconData icon;
   final VoidCallback onPressed;
 
-  const ButtonTile({Key? key, required this.title, required this.icon, required this.onPressed}) : super(key: key);
+  const ButtonTile({super.key, required this.title, required this.icon, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -195,7 +195,7 @@ class ButtonTile extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
-                color: const Color.fromARGB(255, 183, 88, 0), // Tile text color
+                color: Color.fromARGB(255, 183, 88, 0), // Tile text color
               ),
             ),
           ],
