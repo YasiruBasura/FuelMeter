@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fuelapp/createrefill.dart';
 import 'navBar.dart';
+import 'favourites.dart';
 
 class HomeScreen extends StatelessWidget {
   final String? selectedVehicleId;
@@ -34,13 +36,29 @@ class HomeScreen extends StatelessWidget {
                 return ButtonTile(
                     title: 'Refill',
                     icon: Icons.playlist_add,
-                    onPressed: () => {});
+                    onPressed: () => {
+                       
+                       Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CreateRefillScreen(selectedVehicleId: selectedVehicleId),
+                            ),
+                       ),
+                    });
               } else if (index == 1) {
                 // Total Filled tile
                 return ButtonTile(
                     title: 'Refills',
                     icon: Icons.receipt_long,
-                    onPressed: () => {});
+                    onPressed: () => {
+                       
+                       Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FavoritesScreen(selectedVehicleId: selectedVehicleId),
+                            ),
+                       ),
+                    });
               } else if (index == 2) {
                 // Total Filled tile
                 return ButtonTile(
