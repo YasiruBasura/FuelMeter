@@ -12,13 +12,16 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Your App',
-      theme: ThemeData.dark(),
+      theme: ThemeData.dark().copyWith(
+      scaffoldBackgroundColor: Color.fromARGB(255, 28, 28, 28), // Adjust this color as needed
+    ),
+    
       initialRoute: '/',
       routes: {
         '/': (context) => const  HomeScreen(selectedVehicleId: null),
