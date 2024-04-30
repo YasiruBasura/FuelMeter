@@ -96,31 +96,31 @@ class HomeScreen extends StatelessWidget {
             else if (index == 8) {
               // Last Refill Amount tile
               return ClickableTile(
-                title: 'Last Refill Amount',
-                type: TileType.lastRefillAmount,
+                title: 'Total Refills',
+                type: TileType.totalRefills,
                 selectedVehicleId: selectedVehicleId!,
               );
             }
             else if (index == 11) {
               // Last Refill Amount tile
               return ClickableTile(
-                title: 'Last Refill Amount',
-                type: TileType.lastRefillAmount,
+                title: 'Total Travelled',
+                type: TileType.totalTravelled,
                 selectedVehicleId: selectedVehicleId!,
               );
             }
             else if (index == 12) {
               // Last Refill Amount tile
               return ClickableTile(
-                title: 'Last Refill Amount',
-                type: TileType.lastRefillAmount,
+                title: 'Price /km',
+                type: TileType.pricePerKm,
                 selectedVehicleId: selectedVehicleId!,
               );
             }
             else if (index == 15) {
               // Last Refill Amount tile
               return ClickableTile(
-                title: 'Last Refill Amount',
+                title: 'Estimated usage',
                 type: TileType.lastRefillAmount,
                 selectedVehicleId: selectedVehicleId!,
               );
@@ -205,23 +205,35 @@ class ButtonTile extends StatelessWidget {
   }
 }
 
-
-enum TileType { totalFilled, totalSpent, lastRefillDate, lastRefillAmount }
+enum TileType { 
+  totalFilled, 
+  totalSpent, 
+  lastRefillDate, 
+  lastRefillAmount,
+  totalRefills,
+  totalTravelled,
+  pricePerKm
+}
 
 class ClickableTile extends StatelessWidget {
   final String title;
   final TileType type;
   final String selectedVehicleId;
 
-  const ClickableTile({super.key, required this.title, required this.type, required this.selectedVehicleId});
+  const ClickableTile({
+    Key? key,
+    required this.title,
+    required this.type,
+    required this.selectedVehicleId,
+  }) : super(key: key);
 
-String formatDate(DateTime date) {
-  return '${date.year}-${_addLeadingZero(date.month)}-${_addLeadingZero(date.day)}';
-}
+  String formatDate(DateTime date) {
+    return '${date.year}-${_addLeadingZero(date.month)}-${_addLeadingZero(date.day)}';
+  }
 
-String _addLeadingZero(int value) {
-  return value.toString().padLeft(2, '0');
-}
+  String _addLeadingZero(int value) {
+    return value.toString().padLeft(2, '0');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -241,18 +253,35 @@ String _addLeadingZero(int value) {
 
           final refills = snapshot.data!.docs.map((doc) => doc.data()).toList();
 
-          // Calculate total filled, total spent, last refill, and last refill amount
+          // Calculate total filled, total spent, last refill, total refills, total travelled, and price per kilometer
           double totalFilled = 0;
           double totalSpent = 0;
           DateTime? lastRefillDate;
           double lastRefillAmount = 0;
+          int totalRefills = refills.length;
+          double totalTravelled = 0;
+          double pricePerKm = 0;
+
+refills.sort((a, b) {
+  DateTime dateA = DateTime.parse((a as Map<String, dynamic>)['date']);
+  DateTime dateB = DateTime.parse((b as Map<String, dynamic>)['date']);
+  return dateA.compareTo(dateB);
+});
+
+if (refills.length > 1) {
+  double oldestOdometer = (refills.first as Map<String, dynamic>)['odometer'];
+  double latestOdometer = (refills.last as Map<String, dynamic>)['odometer'];
+  totalTravelled = latestOdometer - oldestOdometer;
+}
+
+
 
           for (var refill in refills) {
             if (refill != null && refill is Map<String, dynamic>) {
               double? filled = refill['filled'] as double?;
               double? sum = refill['sum'] as double?;
               String? dateStr = refill['date'] as String?;
-              
+
               if (filled != null) {
                 totalFilled += filled;
               }
@@ -271,6 +300,10 @@ String _addLeadingZero(int value) {
             }
           }
 
+          if (totalTravelled != 0) {
+            pricePerKm = totalSpent / totalTravelled;
+          }
+
           // Build tile content based on tile type
           String content;
           switch (type) {
@@ -281,91 +314,75 @@ String _addLeadingZero(int value) {
               content = '$totalSpent USD';
               break;
             case TileType.lastRefillDate:
-                content = lastRefillDate != null ? formatDate(lastRefillDate) : 'N/A';
+              content = lastRefillDate != null ? formatDate(lastRefillDate!) : 'N/A';
               break;
             case TileType.lastRefillAmount:
               content = '$lastRefillAmount USD';
               break;
+            case TileType.totalRefills:
+              content = '$totalRefills';
+              break;
+            case TileType.totalTravelled:
+              content = totalTravelled != 0 ? '${totalTravelled.toStringAsFixed(2)} km' : 'N/A';
+              break;
+            case TileType.pricePerKm:
+              content = pricePerKm != 0 ? '${pricePerKm.toStringAsFixed(2)} USD/km' : 'N/A';
+              break;
           }
 
-  return Container(
-  decoration: BoxDecoration(
-    borderRadius: BorderRadius.circular(8), // Tile border radius
-  ),
-  child: ClipRRect(
-    borderRadius: BorderRadius.circular(8), // ClipRRect for border radius
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Expanded(
-          flex: 1,
-          child: Container(
-            color: const Color.fromARGB(255, 55, 55,55), // Top section background color
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8), // Add horizontal padding
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white, // Tile text color
+          return Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8), // Tile border radius
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8), // ClipRRect for border radius
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      color: const Color.fromARGB(255, 55, 55, 55), // Top section background color
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8), // Add horizontal padding
+                          child: Text(
+                            title,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white, // Tile text color
+                            ),
+                            textAlign: TextAlign.center, // Align text to center
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                  textAlign: TextAlign.center, // Align text to center
-                ),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      color: const Color.fromARGB(255, 44, 44, 44), // Bottom section background color
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8), // Add horizontal padding
+                        child: Center(
+                          child: Text(
+                            content,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.white, // Tile text color
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: Container(
-            color: const Color.fromARGB(255, 44, 44,44), // Bottom section background color
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8), // Add horizontal padding
-              child: Center(
-                child: Text(
-                  content,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.white, // Tile text color
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    ),
-  ),
-);
-
-
+          );
         },
       ),
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -41,7 +41,6 @@ void initState() {
     if (refillSnapshot.exists) {
       setState(() {
        _odometer = refillSnapshot['odometer']; 
-       print('Odometer: $_odometer');
         _filled = refillSnapshot['filled'];
         _price = refillSnapshot['price'];
         _sumUSD = refillSnapshot['sum'];
@@ -115,7 +114,7 @@ TimeOfDay _parseTime(String time) {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Update Refill ${widget.refillId}'),
+        title: const Text('Update Refill'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
