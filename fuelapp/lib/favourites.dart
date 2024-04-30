@@ -1,17 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fuelapp/home.dart';
 import 'updaterefill.dart'; // Import the update refill screen
 
 class FavoritesScreen extends StatelessWidget {
   final String? selectedVehicleId;
 
-  const FavoritesScreen({super.key, this.selectedVehicleId});
+   FavoritesScreen({super.key, this.selectedVehicleId});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Refills'),
+        leading: GestureDetector(
+          onTap: () {
+           Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HomeScreen(selectedVehicleId: selectedVehicleId),
+                            ),
+                       );
+          },
+          child: Icon(Icons.arrow_back),
+        ),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance

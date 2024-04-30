@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const  HomeScreen(selectedVehicleId: null),
-        '/favourites': (context) => const FavoritesScreen(),
+        '/favourites': (context) =>  FavoritesScreen(),
         '/createRefill': (context) => const CreateRefillScreen(),
         '/settings': (context) => const SettingsScreen(),
         
