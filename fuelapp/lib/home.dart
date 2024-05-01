@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fuelapp/createrefill.dart';
 import 'navBar.dart';
 import 'favourites.dart';
+import 'prediction.dart';
 
 class HomeScreen extends StatelessWidget {
   final String? selectedVehicleId;
@@ -62,7 +63,16 @@ class HomeScreen extends StatelessWidget {
               } else if (index == 2) {
                 // Total Filled tile
                 return ButtonTile(
-                    title: 'Details', icon: Icons.storage, onPressed: () => {});
+                    title: 'Details', icon: Icons.storage, onPressed: () => {
+                      //navigate to PredictionPage
+                      Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PredictionPage(),
+                            ),
+                       ),
+
+                    });
               } else if (index == 3) {
                 // Total Filled tile
                 return ButtonTile(
