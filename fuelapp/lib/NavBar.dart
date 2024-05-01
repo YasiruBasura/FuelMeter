@@ -48,7 +48,7 @@ class NavBar extends StatelessWidget {
                             return const Text('Vehicle not found');
                           }
                           final data = snapshot.data!.data() as Map<String, dynamic>;
-                          final brand = data['brand'];
+                          final brand = data['make'];
                           final logoUrl = data['logoUrl'];
 
                           return ListTile(

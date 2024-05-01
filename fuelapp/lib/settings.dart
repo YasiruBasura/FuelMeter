@@ -34,7 +34,7 @@ class SettingsScreen extends StatelessWidget {
           // Navigate to create vehicle screen
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const CreateVehicleScreen()),
+            MaterialPageRoute(builder: (context) =>  const CreateVehicleScreen()),
           );
         },
         backgroundColor: const Color.fromARGB(255, 183, 88, 0), // Set background color
@@ -57,14 +57,14 @@ class SettingsScreen extends StatelessWidget {
         ),
       ),
       title: Text(
-        '${vehicle['brand']} ${vehicle['model']}',
+        '${vehicle['make']} ${vehicle['model']}',
         style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Type: ${vehicle['type']}'),
-          Text('Year: ${vehicle['make']}'),
+          Text('Year: ${vehicle['modelYear']}'),
           Text('Id: ${vehicle.id}'),
           // Add more details as needed
         ],

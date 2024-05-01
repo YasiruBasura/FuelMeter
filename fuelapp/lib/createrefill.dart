@@ -37,7 +37,7 @@ class _CreateRefillScreenState extends State<CreateRefillScreen> {
           await _vehicleRef.doc(widget.selectedVehicleId).get();
       if (vehicleSnapshot.exists) {
         setState(() {
-          _vehicleBrand = vehicleSnapshot['brand'];
+          _vehicleBrand = vehicleSnapshot['make'];
           _vehicleModel = vehicleSnapshot['model'];
         });
       }
