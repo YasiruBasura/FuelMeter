@@ -200,7 +200,10 @@ class _CreateRefillScreenState extends State<CreateRefillScreen> {
               child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7, // Fill 70% of available width
                 child: ElevatedButton(
-                  onPressed: _saveRefillData,
+                   onPressed: (){ 
+                  _saveRefillData();
+                   Navigator.pop(context);
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 183, 88, 0),
                   ),

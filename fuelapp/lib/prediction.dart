@@ -126,12 +126,17 @@ class _PredictionPageState extends State<PredictionPage> {
               _buildTextField(co2RatingController, 'CO2 Rating', TextInputType.number),
               _buildTextField(smogRatingController, 'Smog Rating', TextInputType.number),
               SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  await predict();
-                },
-                child: Text('Predict'),
-              ),
+             ElevatedButton(
+  onPressed: () async {
+    await predict();
+  },
+  style: ElevatedButton.styleFrom(
+    backgroundColor:const Color.fromARGB(255, 183, 88, 0), // Button background color
+  ),
+  child: Text('Predict', style: TextStyle(color: Colors.white)), // Text with white color
+),
+
+
               SizedBox(height: 20),
               if (errorMessage.isNotEmpty)
                 Text(
